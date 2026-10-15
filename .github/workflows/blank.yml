@@ -1,1 +1,14 @@
-Virtual PC Online
+val command = buildString {
+    append("test -x '${qemu}' || exit 127; ")
+    append("test -f '${disk}' || exit 2; ")
+    append("exec '${qemu}' ")
+    append("-machine q35,accel=tcg ")
+    append("-m $ram -smp $cpus ")
+    append("-drive file='${disk}',format=qcow2 ")
+    append("-display none -serial stdio ")
+    append("-monitor none -no-reboot")
+}
+
+val process = ProcessBuilder("su", "-c", command)
+    .redirectErrorStream(true)
+    .start()
